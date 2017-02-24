@@ -1,0 +1,6 @@
+ifupdown:
+iproute2:
+isc-dhcp-client:
+net-tools:
+openssh-server:
+systemd:

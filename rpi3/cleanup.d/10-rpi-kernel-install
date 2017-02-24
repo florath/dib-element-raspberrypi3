@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Installs the kernel for Raspberry Pi 3
+#
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+export TARGET_FW=${TARGET_ROOT}/boot/firmware
+
+(cd ${CDIB_RPI3_BASE_DIR}/linux
+ sudo make INSTALL_MOD_PATH=${TARGET_ROOT} modules_install
+
+ # Get the complete version number of the kernel from the
+ # name of the /lib/modules directory
+ KERNEL_DESC=$( (cd ${TARGET_ROOT}/lib/modules && echo *) )
+ 
+ sudo ./scripts/mkknlimg arch/arm64/boot/Image ${TARGET_FW}/kernel7.img
+ sudo cp ${TARGET_FW}/kernel7.img ${TARGET_ROOT}/boot/vmlinuz-${KERNEL_DESC}
+ sudo cp System.map ${TARGET_ROOT}/boot/System.map-${KERNEL_DESC}
+ sudo cp .config ${TARGET_ROOT}/boot/config-${KERNEL_DESC}
+ 
+ sudo cp arch/arm64/boot/dts/broadcom/*.dtb ${TARGET_FW}
+ sudo mkdir -p ${TARGET_FW}/overlays
+ sudo cp arch/arm/boot/dts/overlays/*.dtb* ${TARGET_FW}/overlays/
+ sudo cp arch/arm/boot/dts/overlays/README ${TARGET_FW}/overlays/
+)
