@@ -1,6 +1,15 @@
+aufs-tools:
+busybox:
+cryptsetup:
 ifupdown:
 iproute2:
 isc-dhcp-client:
+klibc-utils:
+kpartx:
+lvm2:
+mdadm:
+multipath-tools:
 net-tools:
+open-iscsi:
 openssh-server:
 systemd:

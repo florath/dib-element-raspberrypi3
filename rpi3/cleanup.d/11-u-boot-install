@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Installs the kernel for Raspberry Pi 3
+#
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+export TARGET_FW=${TARGET_ROOT}/boot/firmware
+
+sudo cp ${CDIB_RPI3_BASE_DIR}/u-boot/u-boot.bin ${TARGET_FW}
+
+cat <<EOF | sudo dd of=${TARGET_FW}/boot.txt
+setenv fdtfile bcm2710-rpi-3-b.dtb
+
+mmc dev 0
+fatload mmc 0:1 \${kernel_addr_r} kernel7.img
+fatload mmc 0:1 \${ramdisk_addr_r} initrd7.img
+fatload mmc 0:1 \${fdt_addr_r} \${fdtfile}
+setenv bootargs "ignore_loglevel loglevel=7 initrd=\${ramdisk_addr_r} rfs=exists:file=/dev/mmcblk0p2,wait=30;root:dev=/dev/mmcblk0p2 bv=udev"
+booti \${kernel_addr_r} \${ramdisk_addr_r} \${fdt_addr_r}
+EOF
+
+(cd ${TARGET_FW}
+ sudo mkimage -A arm64 -O linux -T script -C none -a 0x00000000 -e 0x00000000 \
+	    -n "RPi3 Boot Script" -d boot.txt boot.scr.uimg
+)
+
+cat <<EOF | sudo dd of=${TARGET_FW}/config.txt
+# Get more options/information on http://elinux.org/RPiconfig
+# or on https://www.raspberrypi.org/documentation/configuration/config-txt.md
+# Our kernels are located on a Linux partition. Chainload U-Boot to load them.
+kernel=u-boot.bin
+# Use 64 MB for GPU for RPi with 256 MB (Min 16 - Max 192 MB)
+gpu_mem_256=64
+# Use 64 MB for GPU for RPi with 512 MB (Min 16 - Max 448 MB)
+gpu_mem_512=64
+# Use 128 MB for GPU for RPi with 1024 MB (Min 16 - Max 944 MB)
+gpu_mem_1024=128
+# Turbo mode: 0 = enable dynamic freq/voltage - 1 = always max
+force_turbo=0
+# Start in turbo mode for 30 seconds or until cpufreq sets a frequency
+initial_turbo=30
+# DO NOT overvoltage manually to not void warranty!
+over_voltage=0
+# Boot in AArch64 (64-bit) mode
+arm_control=0x200
+# Fix mini UART input frequency, and setup/enable up the UART.
+enable_uart=1
+# Disable warning overlays as they don't work well together with linux's graphical output
+avoid_warnings=0
+EOF

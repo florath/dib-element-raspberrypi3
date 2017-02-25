@@ -1,6 +1,6 @@
 - local_loop:
     name: image0
-    size: 512MiB
+    size: 768MiB
 
 - partitioning:
     base: image0
@@ -11,7 +11,7 @@
         type: 0e
         size: 64MiB
         mkfs:
-          type: fat
+          type: vfat
           mount:
             mount_point: /boot/firmware
             fstab:

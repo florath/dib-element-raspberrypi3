@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# Downloads the firmware
+#
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+export TARGET_FW=${TARGET_ROOT}/boot/firmware
+
+mkdir -p ${CDIB_RPI3_BASE_DIR}
+
+(cd ${CDIB_RPI3_BASE_DIR}
+ if [ ! -d firmware ]; then
+     (mkdir -p firmware
+      cd firmware
+      for file in start.elf bootcode.bin fixup.dat; do
+	  wget https://github.com/raspberrypi/firmware/raw/master/boot/${file}
+      done
+     )
+ else
+     echo "Using already existant firmware directory"
+ fi
+)

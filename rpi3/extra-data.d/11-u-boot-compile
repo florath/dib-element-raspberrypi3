@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# Builds the u-boot for Raspberry Pi 3
+#
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+mkdir -p ${CDIB_RPI3_BASE_DIR}
+
+(cd ${CDIB_RPI3_BASE_DIR}
+ if [ ! -d u-boot ]; then
+     git clone --depth=1 git://git.denx.de/u-boot.git
+ else
+     echo "Using already existant u-boot directory"
+ fi
+)
+
+export CROSS_COMPILE=aarch64-linux-gnu-
+export ARCH=arm64
+
+(cd ${CDIB_RPI3_BASE_DIR}/u-boot
+ make rpi_3_defconfig
+ make -j6 u-boot.bin
+)
+     

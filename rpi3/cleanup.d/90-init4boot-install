@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Installs the initramfs for Raspberry Pi 3
+#
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+export TARGET_FW=${TARGET_ROOT}/boot/firmware
+
+KERNEL_DESC=$( (cd ${TARGET_ROOT}/lib/modules && echo *) )
+echo "Creating initramfs for [${KERNEL_DESC}]"
+sudo ${CDIB_RPI3_BASE_DIR}/init4boot/i4b-mkinitramfs \
+     --output=${TARGET_ROOT}/boot/initrd.img-${KERNEL_DESC} \
+     --root-dir=${TARGET_ROOT} --plugins=${CDIB_RPI3_BASE_DIR}/init4boot
+
+echo "Installing initramfs"
+INITRD="$(ls -1 ${TARGET_ROOT}/boot/initrd.img-* | sort | tail -n 1)"
+test -z "${INITRD}" && exit 1
+sudo mkimage -A arm64 -O linux -T ramdisk -C gzip -a 0x00000000 -e 0x00000000 \
+	-n "RPi3 initrd" -d ${INITRD} ${TARGET_FW}/initrd7.img
+#sudo cp ${INITRD} ${TARGET_FW}/initrd7.org

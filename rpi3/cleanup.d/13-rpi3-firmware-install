@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Installs the kernel for Raspberry Pi 3
+#
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+export TARGET_FW=${TARGET_ROOT}/boot/firmware
+
+sudo cp ${CDIB_RPI3_BASE_DIR}/firmware/* ${TARGET_FW}

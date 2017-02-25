@@ -27,8 +27,7 @@ case ${DIST} in
 esac
 
 export DIB_DISTRIBUTION_MIRROR=http://10.4.0.4:3142/${mirror}
-export DIB_APT_SOURCES_CONF=\
-  "default:deb http://10.4.0.4:3142/${mirror} ${RELEASE} main contrib non-free"
+export DIB_APT_SOURCES_CONF="default:deb http://10.4.0.4:3142/${mirror} ${RELEASE} main contrib non-free"
 
 ADD_ELEMENTS="devuser rpi3"
 
