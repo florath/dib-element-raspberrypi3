@@ -9,8 +9,6 @@ fi
 set -eu
 set -o pipefail
 
-export TARGET_FW=${TARGET_ROOT}/boot/firmware
-
 mkdir -p ${CDIB_RPI3_BASE_DIR}
 
 (cd ${CDIB_RPI3_BASE_DIR}
