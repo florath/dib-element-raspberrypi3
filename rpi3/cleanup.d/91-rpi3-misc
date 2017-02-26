@@ -12,5 +12,5 @@ set -o pipefail
 export TARGET_FW=${TARGET_ROOT}/boot/firmware
 
 # 'ib_iser' is not a module and cannot be loaded
-rm -f ${TARGET_ROOT}/lib/modules-load.d/open-iscsi.conf
+sudo rm -f ${TARGET_ROOT}/lib/modules-load.d/open-iscsi.conf
 
