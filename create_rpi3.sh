@@ -13,18 +13,8 @@ export DIB_DEV_USER_PWDLESS_SUDO=yes
 export DIB_DEV_USER_USERNAME="dib"
 export DIB_DEV_USER_PASSWORD="dib"
 export DIB_DEV_USER_SHELL="/bin/bash"
-export DIB_ETHERNET_DEVICE_NAMES="ens3"
 
 export DIB_RELEASE=${RELEASE}
-
-case ${DIST} in
-    debian*)
-        mirror=debian
-        ;;
-    ubuntu*)
-        mirror=ubuntu
-        ;;
-esac
 
 export DIB_DISTRIBUTION_MIRROR=http://10.4.0.4:3142/${mirror}
 export DIB_APT_SOURCES_CONF="default:deb http://10.4.0.4:3142/${mirror} ${RELEASE} main contrib non-free"

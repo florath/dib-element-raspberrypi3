@@ -1,9 +1,9 @@
-rpikernel
----------
+rpi3
+----
 
-Kernel for RaspberryPi3
+Image creation for RaspberryPi3
 
-There is the need to install the arm64 bit development tools like:
+There is the need to install the arm64 bit development tools on the host:
 
 ::
 
