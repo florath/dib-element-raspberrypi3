@@ -72,10 +72,11 @@ They can be e.g. cherry picked (see upper right corner of the page).
 
 rpi3 module
 -----------
+
 The module itself needs some packages that must be installed. Look at
 rpi3-readme_ for details.
 
-.. _rpi3_readme: rpi/Readme.rst
+.. _rpi3-readme: rpi/Readme.rst
 
 
 Configuration
@@ -111,6 +112,57 @@ Mostly no post-install procedures are needed. You might want to adapt
 network configuration.  Also the installed system is minimal, i.e. if
 you want to use the RPi3 with GUI, you have to install the appropriate
 packages.
+
+
+Controlling GPIO
+++++++++++++++++
+
+Not all GPIO libraries can be used (directly), because some use the fact,
+that in some kernel versions there are special entries in the
+/proc/cpuinfo.
+
+The following methods are known to work
+
+
+Using sysfs
+-----------
+
+All methods and libraries that are using the /sys/class/gpio interface
+are working.
+
+
+The bcm2835 library
+-------------------
+
+Using bcm2835_library_ works. Please note that this comes under GPL -
+therefore also any source code that uses it must be delivered.  There
+is a separate license for commercial projects.
+
+.. _bcm2835_library: http://www.airspayce.com/mikem/bcm2835/
+
+
+wiringPi
+--------
+
+The original wiringPi_ does not work, because it uses information from
+the /proc/cpuinfo and bails out if if does not find those.
+Nevertheless there is a fork available wiringPi64_ that is known to
+work also with 64 bit systems.
+
+.. _wiringPi: http://wiringpi.com/
+
+.. _wiringPi64: https://github.com/florath/wireingPi64
+
+
+Tutorial
+++++++++
+
+There is currently a small set of videos (in German) available on
+Youtube_ that describes the setup of a Raspberry Pi 3 using this
+diskimage-builder element.
+
+.. _Youtube: https://www.youtube.com/playlist?list=PLB3AzDIYHSUk1CPf7k-DagLCVqSlbPq8l
+
 
 It works
 ++++++++
